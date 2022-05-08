@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DentistaRequest;
 use App\Models\Dentista;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,14 @@ class DentistaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DentistaRequest $request)
     {
         //
+        $validated = $request->validated();
+        $dentista = Dentista::create($validated);
+
+        return  response()->json($dentista);
+
     }
 
     /**
@@ -44,9 +50,10 @@ class DentistaController extends Controller
      * @param  \App\Models\Dentista  $dentista
      * @return \Illuminate\Http\Response
      */
-    public function show(Dentista $dentista)
+    public function show(int $id)
     {
         //
+        $dentista = Dentista::findOrFail($id);
     }
 
     /**
@@ -67,9 +74,15 @@ class DentistaController extends Controller
      * @param  \App\Models\Dentista  $dentista
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Dentista $dentista)
+    public function update(DentistaRequest $request, int $id)
     {
         //
+        $dentista = Dentista::findOrFail($id);
+        $validated = $request->validated();
+        $dentista->fill($validated);
+        $dentista->save();
+
+        return response()->json($dentista);
     }
 
     /**
@@ -78,8 +91,12 @@ class DentistaController extends Controller
      * @param  \App\Models\Dentista  $dentista
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dentista $dentista)
+    public function destroy(int $id)
     {
         //
+        $dentista = Dentista::findOrFail($id);
+        $dentista->delete();
+
+        return response()->json($dentista);
     }
 }

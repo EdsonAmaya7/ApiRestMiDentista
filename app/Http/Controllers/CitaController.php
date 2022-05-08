@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CitaRequest;
 use App\Models\Cita;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class CitaController extends Controller
     public function index()
     {
         //
+
     }
 
     /**
@@ -33,9 +35,14 @@ class CitaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CitaRequest $request)
     {
         //
+        $validated = $request->validated();
+        $cita = Cita::create($validated);
+
+        return  response()->json($cita);
+
     }
 
     /**
@@ -44,9 +51,10 @@ class CitaController extends Controller
      * @param  \App\Models\Cita  $cita
      * @return \Illuminate\Http\Response
      */
-    public function show(Cita $cita)
+    public function show(int $id)
     {
         //
+        $cita = Cita::findOrFail($id);
     }
 
     /**
@@ -67,9 +75,15 @@ class CitaController extends Controller
      * @param  \App\Models\Cita  $cita
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cita $cita)
+    public function update(CitaRequest $request, int $id)
     {
-        //
+
+        $cita = Cita::findOrFail($id);
+        $validated = $request->validated();
+        $cita->fill($validated);
+        $cita->save();
+
+        return response()->json($cita);
     }
 
     /**
@@ -78,8 +92,12 @@ class CitaController extends Controller
      * @param  \App\Models\Cita  $cita
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cita $cita)
+    public function destroy(int $id)
     {
-        //
+
+        $cita = Cita::findOrFail($id);
+        $cita->delete();
+
+        return response()->json($cita);
     }
 }

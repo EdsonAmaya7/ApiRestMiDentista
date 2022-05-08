@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
+use Facade\FlareClient\Http\Client;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -33,9 +35,13 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClienteRequest $request)
     {
         //
+        $validated = $request->validated();
+        $cliente = Cliente::create($validated);
+
+        return  response()->json($cliente);
     }
 
     /**
@@ -44,9 +50,10 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show(Cliente $id)
     {
         //
+        $cliente = Cliente::findOrFail($id);
     }
 
     /**
@@ -67,9 +74,15 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(ClienteRequest $request, int $id)
     {
         //
+        $cliente = Cliente::findOrFail($id);
+        $validated = $request->validated();
+        $cliente->fill($validated);
+        $cliente->save();
+
+        return response()->json($cliente);
     }
 
     /**
@@ -78,8 +91,13 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(int $id)
     {
         //
+        $cliente = Cliente::findOrFail($id);
+        $cliente->delete();
+
+        return response()->json($cliente);
     }
+
 }

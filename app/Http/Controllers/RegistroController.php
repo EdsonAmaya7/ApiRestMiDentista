@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegistroRequest;
 use App\Models\Registro;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,13 @@ class RegistroController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RegistroRequest $request)
     {
         //
+        $validated = $request->validated();
+        $registro = Registro::create($validated);
+
+        return  response()->json($registro);
     }
 
     /**
@@ -44,9 +49,10 @@ class RegistroController extends Controller
      * @param  \App\Models\Registro  $registro
      * @return \Illuminate\Http\Response
      */
-    public function show(Registro $registro)
+    public function show(int $id)
     {
         //
+        $registro = Registro::findOrFail($id);
     }
 
     /**
@@ -67,9 +73,15 @@ class RegistroController extends Controller
      * @param  \App\Models\Registro  $registro
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Registro $registro)
+    public function update(RegistroRequest $request, int $id)
     {
         //
+        $registro = Registro::findOrFail($id);
+        $validated = $request->validated();
+        $registro->fill($validated);
+        $registro->save();
+
+        return response()->json($registro);
     }
 
     /**
@@ -78,8 +90,12 @@ class RegistroController extends Controller
      * @param  \App\Models\Registro  $registro
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Registro $registro)
+    public function destroy(int $id)
     {
         //
+        $registro = Registro::findOrFail($id);
+        $registro->delete();
+
+        return response()->json($registro);
     }
 }
