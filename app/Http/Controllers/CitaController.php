@@ -16,6 +16,7 @@ class CitaController extends Controller
     public function index()
     {
         //
+        return response()->json(Cita::all());
 
     }
 
@@ -40,8 +41,7 @@ class CitaController extends Controller
         //
         $validated = $request->validated();
         $cita = Cita::create($validated);
-
-        return  response()->json($cita);
+        return  response()->json(['mensaje'=>'Cita guardada exitosamente'],200);
 
     }
 
@@ -55,6 +55,11 @@ class CitaController extends Controller
     {
         //
         $cita = Cita::findOrFail($id);
+
+        if(is_null($cita)){
+            return response()->json(['mensaje'=> 'Cita no encontrada'],404);
+        }
+        return response()->json($cita::find($id),200);
     }
 
     /**
@@ -79,11 +84,15 @@ class CitaController extends Controller
     {
 
         $cita = Cita::findOrFail($id);
+
+        if(is_null($cita)){
+            return response()->json(['mensaje'=> 'Cita no encontrada'],404);
+        }
+
         $validated = $request->validated();
         $cita->fill($validated);
         $cita->save();
-
-        return response()->json($cita);
+        return response()->json(['mensaje'=> 'Cita actualizada'],200);
     }
 
     /**
@@ -94,10 +103,29 @@ class CitaController extends Controller
      */
     public function destroy(int $id)
     {
-
         $cita = Cita::findOrFail($id);
+        if(is_null($cita)){
+            return response()->json(['mensaje'=> 'Cita no encontrada'],404);
+        }
         $cita->delete();
+        return response()->json(['mensaje'=>'Cita eliminada correctamente'],200);
+    }
 
-        return response()->json($cita);
+    public function getCitasByFecha(string $fecha)
+    {
+        $citas = Cita::where('fecha',$fecha)->where('is_atendido',0)->get();
+        if(is_null($citas)){
+            return response()->json(['mensaje'=> 'Fecha sin citas'],404);
+        }
+        return response()->json($citas,200);
+    }
+
+    public function getCitasByUser(int $id)
+    {
+        $citas = Cita::where('user_od',$id)->where('is_atendido',0)->get();
+        if(is_null($citas)){
+            return response()->json(['mensaje'=> 'Usuario sin citas'],404);
+        }
+        return response()->json($citas,200);
     }
 }

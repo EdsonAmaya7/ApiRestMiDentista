@@ -17,6 +17,8 @@ class ClienteController extends Controller
     public function index()
     {
         //
+
+        return response()->json(Cliente::all());
     }
 
     /**
@@ -41,7 +43,7 @@ class ClienteController extends Controller
         $validated = $request->validated();
         $cliente = Cliente::create($validated);
 
-        return  response()->json($cliente);
+        return  response()->json(['mensaje'=>'Cliente guardado exitosamente'],200);
     }
 
     /**
@@ -50,10 +52,15 @@ class ClienteController extends Controller
      * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $id)
+    public function show(int $id)
     {
         //
         $cliente = Cliente::findOrFail($id);
+
+        if(is_null($cliente)){
+            return response()->json(['mensaje'=> 'Cliente no encontrado'],404);
+        }
+        return response()->json($cliente::find($id),200);
     }
 
     /**
@@ -78,11 +85,14 @@ class ClienteController extends Controller
     {
         //
         $cliente = Cliente::findOrFail($id);
+        if(is_null($cliente)){
+            return response()->json(['mensaje'=> 'Cliente no encontrado'],404);
+        }
+
         $validated = $request->validated();
         $cliente->fill($validated);
         $cliente->save();
-
-        return response()->json($cliente);
+        return response()->json(['mensaje'=> 'Cliente actualizado'],200);
     }
 
     /**
@@ -95,6 +105,10 @@ class ClienteController extends Controller
     {
         //
         $cliente = Cliente::findOrFail($id);
+
+        if(is_null($cliente)){
+            return response()->json(['mensaje'=> 'Cliente no encontrado'],404);
+        }
         $cliente->delete();
 
         return response()->json($cliente);

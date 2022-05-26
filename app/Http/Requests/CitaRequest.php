@@ -27,6 +27,8 @@ class CitaRequest extends FormRequest
             //
             'fecha' => 'required',
             'hora' => 'required',
+            'is_atendido' => 'required',
+            'user_id' => 'required',
         ];
     }
 }

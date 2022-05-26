@@ -16,6 +16,8 @@ class DentistaController extends Controller
     public function index()
     {
         //
+
+        return response()->json(Dentista::all());
     }
 
     /**
@@ -40,7 +42,7 @@ class DentistaController extends Controller
         $validated = $request->validated();
         $dentista = Dentista::create($validated);
 
-        return  response()->json($dentista);
+        return  response()->json(['mensaje'=>'Dentista guardado exitosamente'],200);
 
     }
 
@@ -54,6 +56,10 @@ class DentistaController extends Controller
     {
         //
         $dentista = Dentista::findOrFail($id);
+        if(is_null($dentista)){
+            return response()->json(['mensaje'=> 'Dentista no encontrado'],404);
+        }
+        return response()->json($dentista::find($id),200);
     }
 
     /**
@@ -78,11 +84,14 @@ class DentistaController extends Controller
     {
         //
         $dentista = Dentista::findOrFail($id);
+        if(is_null($dentista)){
+            return response()->json(['mensaje'=> 'Dentista no encontrado'],404);
+        }
         $validated = $request->validated();
         $dentista->fill($validated);
         $dentista->save();
 
-        return response()->json($dentista);
+        return response()->json(['mensaje'=>'Dentista actualizado'],200);
     }
 
     /**
@@ -95,8 +104,11 @@ class DentistaController extends Controller
     {
         //
         $dentista = Dentista::findOrFail($id);
+        if(is_null($dentista)){
+            return response()->json(['mensaje'=> 'Dentista no encontrado'],404);
+        }
         $dentista->delete();
 
-        return response()->json($dentista);
+        return response()->json(['mensaje'=>'Dentista eliminado'],200);
     }
 }

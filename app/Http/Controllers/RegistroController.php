@@ -16,6 +16,7 @@ class RegistroController extends Controller
     public function index()
     {
         //
+        return response()->json(Registro::all());
     }
 
     /**
@@ -39,8 +40,7 @@ class RegistroController extends Controller
         //
         $validated = $request->validated();
         $registro = Registro::create($validated);
-
-        return  response()->json($registro);
+        return  response()->json(['mensaje'=>'Registro guardado'],200);
     }
 
     /**
@@ -53,6 +53,10 @@ class RegistroController extends Controller
     {
         //
         $registro = Registro::findOrFail($id);
+        if(is_null($registro)){
+            return response()->json(['mensaje'=> 'registro no encontrado'],404);
+        }
+        return response()->json($registro::find($id),200);
     }
 
     /**
@@ -77,11 +81,14 @@ class RegistroController extends Controller
     {
         //
         $registro = Registro::findOrFail($id);
+        if(is_null($registro)){
+            return response()->json(['mensaje'=> 'registro no encontrado'],404);
+        }
         $validated = $request->validated();
         $registro->fill($validated);
         $registro->save();
 
-        return response()->json($registro);
+        return response()->json(['mensaje'=>'Registro actualizado'],200);
     }
 
     /**
@@ -94,8 +101,11 @@ class RegistroController extends Controller
     {
         //
         $registro = Registro::findOrFail($id);
+        if(is_null($registro)){
+            return response()->json(['mensaje'=> 'registro no encontrad0'],404);
+        }
         $registro->delete();
 
-        return response()->json($registro);
+        return response()->json(['mensaje'=>'registro eliminado'],200);
     }
 }

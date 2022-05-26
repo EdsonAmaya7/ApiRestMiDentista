@@ -23,12 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/getCitasByFecha/{fecha}',[CitaController::class,'getCitasByFecha'])->name('getCitasByFecha');
+Route::get('/getCitasByUser/{id}',[CitaController::class,'getCitasByUser'])->name('getCitasByUser');
 
-Route::resources([
 
-    '/citas' => CitaController::class,
-    '/dentistas' => DentistaController::class,
-    '/clientes' =>ClienteController::class,
-    '/users' =>UserController::class,
-    '/registro' =>RegistroController::class,
-]);
+
+Route::resource('/citas',CitaController::class)->except(['create','edit']);
+Route::resource('/dentistas',DentistaController::class)->except(['create','edit']);
+Route::resource('/clientes',ClienteController::class)->except(['create','edit']);
+Route::resource('/users',UserController::class)->except(['create','edit']);
+Route::resource('/registro',RegistroController::class)->except(['create','edit']);

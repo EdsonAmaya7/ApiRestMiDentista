@@ -17,6 +17,8 @@ class CreateCitasTable extends Migration
             $table->id();
             $table->date('fecha');
             $table->time('hora');
+            $table->boolean('is_atendido')->default(0);
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
