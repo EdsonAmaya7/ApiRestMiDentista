@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\FacebookLoginController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DentistaController;
@@ -33,3 +34,4 @@ Route::resource('/dentistas',DentistaController::class)->except(['create','edit'
 Route::resource('/clientes',ClienteController::class)->except(['create','edit']);
 Route::resource('/users',UserController::class)->except(['create','edit']);
 Route::resource('/registro',RegistroController::class)->except(['create','edit']);
+
